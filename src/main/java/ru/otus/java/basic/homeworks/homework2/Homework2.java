@@ -13,10 +13,10 @@ public class Homework2 {
 //        fillingInAnEmptyArray(6, new int[3]);
 //        increasingTheArrayCells(2, new int[]{3, 8, 5, 6});
 //        comparingTheSumsOfTheHalves(new int[]{3, 8, 1, 9, 5, 2});
-//        SumOfThreeArrays();
-//        findingThePointOfEqualityOfTheHalvesOfTheArray();
-//        checkingTheSorting();
-//        flippingAnArray();
+//        sumOfThreeArrays(new int[]{1, 2, 3}, new int[]{2, 2}, new int[]{1, 1, 1, 1, 1});
+//        findingPointEquaArray(new int[]{1, 1, 1, 1, 1, 5});
+//        checkingTheSorting(new int[]{1, 2, 3, 4});
+//        flippingAnArray(new int[]{1, 2, 3, 4});
     }
 
     //    Основные задачи
@@ -30,7 +30,7 @@ public class Homework2 {
         int sum = 0;
         for (int i = 0; i < arr.length; i++)
             if (arr[i] > 5) {
-                sum = arr[i] + sum;
+                sum += arr[i];
             }
         System.out.println(sum);
     }
@@ -61,96 +61,60 @@ public class Homework2 {
         if (sumFirstHalfArr > sumSecondHalfArr) {
             System.out.println("Сумма левой половины больше");
         } else {
-            System.out.println("Сумма правой половины больше");
+            System.out.println("Сумма правой половины больше или равна");
         }
     }
 
     //        Задачи под звёздочкой
-    private static void SumOfThreeArrays() {
-        int[] fistArr = {1, 2, 3}, secondArr = {2, 2}, thirdArr = {1, 1, 1, 1, 1};
-        int[] maxSizeFistAndSecond = new int[(int) Math.max(fistArr.length, secondArr.length)];
-        int[] maxSizeAllAndSThird = new int[(int) Math.max(maxSizeFistAndSecond.length, thirdArr.length)];
-        for (int i = 0; i < maxSizeFistAndSecond.length; i++) {
-            if (fistArr.length > i && secondArr.length > i) {
-                maxSizeFistAndSecond[i] = fistArr[i] + secondArr[i];
-            } else if (fistArr.length < secondArr.length) {
-                maxSizeFistAndSecond[i] += secondArr[i];
-            } else if (secondArr.length < fistArr.length) {
-                maxSizeFistAndSecond[i] += fistArr[i];
-            }
+    private static void sumOfThreeArrays(int[] fistArr, int[] secondArr, int[] thirdArr) {
+        int[] maxSizeArr = new int[(int) Math.max(thirdArr.length, Math.max(fistArr.length, secondArr.length))];
+        for (int i = 0; i < fistArr.length; i++) {
+            maxSizeArr[i] += fistArr[i];
         }
-        for (int i = 0; i < maxSizeAllAndSThird.length; i++) {
-            if (maxSizeFistAndSecond.length > i && thirdArr.length > i) {
-                maxSizeAllAndSThird[i] = maxSizeFistAndSecond[i] + thirdArr[i];
-            } else if (maxSizeFistAndSecond.length < thirdArr.length) {
-                maxSizeAllAndSThird[i] += thirdArr[i];
-            } else if (thirdArr.length < maxSizeFistAndSecond.length) {
-                maxSizeAllAndSThird[i] += maxSizeFistAndSecond[i];
-            }
+        for (int i = 0; i < secondArr.length; i++) {
+            maxSizeArr[i] += secondArr[i];
         }
-        System.out.print(Arrays.toString(maxSizeAllAndSThird));
+        for (int i = 0; i < thirdArr.length; i++) {
+            maxSizeArr[i] += thirdArr[i];
+        }
+        System.out.print(Arrays.toString(maxSizeArr));
     }
 
-    private static void findingThePointOfEqualityOfTheHalvesOfTheArray() {
-        int[] arrForSearch = {1, 1, 1, 1, 1, 5};
-        int totalSumOfTheArr = 0, sumOfTheLeftPartOfTheArr = 0, firstPoint = 0, secondPoint = 0;
-        boolean flag = false;
+    private static void findingPointEquaArray(int[] arrForSearch) {
+        int totalSumArr = 0, sumLeftPart = 0;
         for (int i = 0; i < arrForSearch.length; i++) {
-            totalSumOfTheArr += arrForSearch[i];
+            totalSumArr += arrForSearch[i];
         }
-        if (totalSumOfTheArr % 2 == 0) {
-            while (!flag) {
-                for (int i = 0; i < arrForSearch.length - 1; i++) {
-                    if (totalSumOfTheArr / 2 != sumOfTheLeftPartOfTheArr) {
-                        sumOfTheLeftPartOfTheArr += arrForSearch[i];
-                        firstPoint = i;
-                        secondPoint = i + 1;
-                    } else {
-                        flag = true;
-                    }
-                }
-            }
-            System.out.println("Точка находится между элементами с индексами " + firstPoint + " и " + secondPoint);
-        } else {
+        if (totalSumArr % 2 != 0) {
             System.out.println("Точки нет!");
+            return;
+        }
+        for (int i = 0; i < arrForSearch.length - 1; i++) {
+            sumLeftPart += arrForSearch[i];
+            if (totalSumArr / 2 == sumLeftPart) {
+                System.out.println("Точка находится между элементами с индексами " + i + " и " + (i + 1));
+                break;
+            }
         }
     }
 
-    private static void checkingTheSorting() {
-        int[] arr = {1, 2, 3, 4};
-        int[] sortArr = Arrays.copyOf(arr, arr.length);
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Выбирете направление сортировки: убывание, возрастание");
-        String sortingDirection = scanner.next();
-
-        switch (sortingDirection) {
-            case "убывание":
-                Arrays.sort(sortArr);
-                for (int i = 0; i < sortArr.length / 2; i++) {
-                    int storage = sortArr[i];
-                    sortArr[i] = sortArr[sortArr.length - 1 - i];
-                    sortArr[sortArr.length - 1 - i] = storage;
-                }
-                if (Arrays.equals(arr, sortArr)) {
-                    System.out.println("По убыванию");
-                } else {
-                    System.out.println("Не по убыванию");
-                }
+    private static void checkingTheSorting(int[] arr) {
+        String resultSort = "";
+        for (int i = 1; i < arr.length - 1; i++) {
+            if (arr[i] > arr[(i + 1)] && arr[i] < arr[(i - 1)]) {
+                resultSort = "По убыванию";
+            }
+            if (arr[i] < arr[(i + 1)] && arr[i] > arr[(i - 1)]) {
+                resultSort = "По возрастанию";
+            } else {
+                resultSort = "Рандомный порядок";
                 break;
-            case "возрастание":
-                Arrays.sort(sortArr);
-                if (Arrays.equals(arr, sortArr)) {
-                    System.out.println("По возрастанию");
-                } else {
-                    System.out.println("Не по возрастанию");
-                }
-                break;
-
+            }
         }
+        System.out.println(resultSort);
     }
 
-    private static void flippingAnArray() {
-        int[] arr1 = {1, 2, 3, 4};
+    private static void flippingAnArray(int[] arr1) {
         for (int i = 0; i < arr1.length / 2; i++) {
             int storage = arr1[i];
             arr1[i] = arr1[arr1.length - 1 - i];
