@@ -2,15 +2,14 @@ package ru.otus.java.basic.homeworks.homework3;
 
 public class Homework3 {
     public static void main(String[] args) {
-//        sumOfPositiveElements(new int[][] {{1, 3, -2}, {2, 4, 1}});
+//        System.out.println(sumOfPositiveElements(new int[][]{{1, 3, -2}, {2, 4, 1}}));
 //        drawSquareStars(5);
 //        diagonalsSquareArr(new int[][]{{1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}});
-//        findMax(new int[][]{{7, 1, 8}, {2, 9, 3}, {6, 4, 5}});
-//        sumSecondLineArr(new int[][]{{10, 2, 3}, {7, 2, 1}, {4, 5, 2}});
-
+//        System.out.println(findMax(new int[][]{{7, 1, 8}, {2, 9, 3}, {6, 4, 5}}));
+//        System.out.println(sumSecondLineArr(new int[][]{{10, 2, 3}, {7, 2, 1}, {4, 5, 2}}));
     }
 
-    private static void sumOfPositiveElements(int[][] doubleArr) {
+    private static int sumOfPositiveElements(int[][] doubleArr) {
         int sumDoubleArr = 0;
         for (int i = 0; i < doubleArr.length; i++) {
             for (int j = 0; j < doubleArr[i].length; j++) {
@@ -19,20 +18,14 @@ public class Homework3 {
                 }
             }
         }
-        System.out.println(sumDoubleArr);
+        return sumDoubleArr;
     }
 
     private static void drawSquareStars(int size) {
         char star = '*';
-        char[][] drawSquare = new char[size][size];
-        for (int i = 0; i < drawSquare.length; i++) {
-            for (int j = 0; j < drawSquare[i].length; j++) {
-                if (i == 0 || j == drawSquare.length - 1 || i == drawSquare.length - 1 || j == 0) {
-                    drawSquare[i][j] = star;
-                } else {
-                    drawSquare[i][j] = ' ';
-                }
-                System.out.print(drawSquare[i][j]);
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                System.out.print(star);
             }
             System.out.println();
         }
@@ -50,7 +43,7 @@ public class Homework3 {
         }
     }
 
-    private static void findMax(int[][] array) {
+    private static int findMax(int[][] array) {
         int maxNumber = array[0][0];
         for (int i = 0; i < array.length; i++) {
             for (int j = 0; j < array[j].length - 1; j++) {
@@ -59,10 +52,10 @@ public class Homework3 {
                 }
             }
         }
-        System.out.println(maxNumber);
+        return maxNumber;
     }
 
-    private static void sumSecondLineArr(int[][] arr) {
+    private static int sumSecondLineArr(int[][] arr) {
         int sumLine = 0;
         if (arr.length < 2) {
             sumLine = -1;
@@ -71,6 +64,6 @@ public class Homework3 {
                 sumLine += arr[1][i];
             }
         }
-        System.out.println(sumLine);
+        return sumLine;
     }
 }
