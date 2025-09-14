@@ -27,14 +27,14 @@ public class Homework4 {
 
     }
 
-//    private static void overForty(User[] users) {
-//        for (int i = 0; i < users.length; i++) {
-//            if (2025 - users[i].getYearBirth() > 40) {
-//                System.out.println("ФИО: " + users[i].getSurname() + " " + users[i].getName() + " " + users[i].getPatronymic());
-//                System.out.println("Год рождения: " + users[i].getYearBirth());
-//                System.out.println("Email: " + users[i].getEmail());
-//                System.out.println();
-//            }
-//        }
-//    }
+    private static void overForty(User[] users) {
+        for (int i = 0; i < users.length; i++) {
+            if (2025 - users[i].getYearBirth() > 40) {
+                System.out.println("ФИО: " + users[i].getSurname() + " " + users[i].getName() + " " + users[i].getPatronymic());
+                System.out.println("Год рождения: " + users[i].getYearBirth());
+                System.out.println("Email: " + users[i].getEmail());
+                System.out.println();
+            }
+        }
+    }
 }

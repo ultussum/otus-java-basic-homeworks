@@ -79,10 +79,10 @@ public class Box {
     }
 
     public void putOrDump() {
-        if (openOrClose == "открыта" && object == "пусто") {
+        if (openOrClose.equals("открыта") && object.equals("пусто")) {
             object = "есть предмет";
             System.out.println("В коробку положили предмет");
-        } else if (openOrClose == "открыта" && object == "есть предмет") {
+        } else if (openOrClose.equals("открыта")  && object.equals("есть предмет") ) {
             object = "пусто";
             System.out.println("Из коробки выбросили предмет");
         } else {
