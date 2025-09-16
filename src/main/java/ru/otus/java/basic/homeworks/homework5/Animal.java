@@ -1,10 +1,10 @@
 package ru.otus.java.basic.homeworks.homework5;
 
 public abstract class Animal {
-    String name;
-    int runningSpeed;
-    int swimmingSpeed;
-    int endurance;
+    protected String name;
+    protected int runningSpeed;
+    protected int swimmingSpeed;
+    protected int endurance;
 
     public Animal(String name, int runningSpeed, int swimmingSpeed, int endurance) {
         this.name = name;
@@ -22,7 +22,7 @@ public abstract class Animal {
 
     public int run(int distance) {
         int time = 0;
-        if (endurance - distance > 0) {
+        if (endurance - distance > 0 && runningSpeed != 0) {
             time = distance / runningSpeed;
             endurance -= distance;
             System.out.println(name + " пробежал за " + time + " сек., выносливости осталось " + endurance + " ед.");

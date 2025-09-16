@@ -8,9 +8,10 @@ public class Dog extends Animal {
     @Override
     public int swim(int distance) {
         int time = 0;
-        if (endurance - 2 * distance >= 0) {
+        final int expenditure = 2;
+        if (endurance - expenditure * distance >= 0 && swimmingSpeed != 0) {
             time = distance / swimmingSpeed;
-            endurance = endurance - 2 * distance;
+            endurance = endurance - expenditure * distance;
             System.out.println(name + " пробежал за " + time + " сек., выносливости осталось " + endurance + " ед.");
         } else {
             time = -1;
