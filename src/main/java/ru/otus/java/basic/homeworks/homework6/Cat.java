@@ -39,7 +39,7 @@ public class Cat {
         if (isHungry && plate.getCurrentFood() - appetite >= 0) {
             System.out.println(name + " поел.");
             plate.decreaseFood(appetite);
-            isHungry = true;
+            isHungry = false;
         } else if (isHungry && plate.getCurrentFood() - appetite < 0) {
             System.out.println(name + " не смог поесть, не хватило еды :(");
         } else {
