@@ -10,7 +10,7 @@ public class Homework6 {
                 new Cat("Bobby", 2, false),
                 new Cat("Swen", 6, true)};
         for (int i = 0; i < cat.length; i++) {
-            cat[i].eat(plate, cat[i]);
+            cat[i].eat(plate);
         }
         System.out.println();
         plate.info();

@@ -35,10 +35,10 @@ public class Cat {
         this.isHungry = hungry;
     }
 
-    public void eat(Plate plate, Cat cat) {
+    public void eat(Plate plate) {
         if (isHungry && plate.getCurrentFood() - appetite >= 0) {
             System.out.println(name + " поел.");
-            plate.decreaseFood(cat);
+            plate.decreaseFood(appetite);
             isHungry = true;
         } else if (isHungry && plate.getCurrentFood() - appetite < 0) {
             System.out.println(name + " не смог поесть, не хватило еды :(");

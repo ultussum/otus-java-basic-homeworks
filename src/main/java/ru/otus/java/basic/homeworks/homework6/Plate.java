@@ -40,9 +40,9 @@ public class Plate {
         }
     }
 
-    public boolean decreaseFood(Cat cat) {
-        if (currentFood - cat.getAppetite() >= 0) {
-            currentFood -= cat.getAppetite();
+    public boolean decreaseFood(int appetite) {
+        if (currentFood - appetite >= 0) {
+            currentFood -= appetite;
             return true;
         } else {
             return false;
