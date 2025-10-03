@@ -2,6 +2,7 @@ package ru.otus.java.basic.homeworks.homework7;
 
 public class Horse extends GeneralTransport {
     private int endurance;
+    private final int MAX_DIST = 20;
 
     public int getPetrol() {
         return endurance;
@@ -27,7 +28,7 @@ public class Horse extends GeneralTransport {
             System.out.println("Лошадь не может двигаться по местности " + terrainType.getTerrainRu());
             return false;
         }
-        if (distant > 20 || endurance < distant) {
+        if (distant > MAX_DIST || endurance < distant) {
             System.out.println("Не может передвигаться! Слишком большое расстояние или закончились силы.");
             return false;
         }

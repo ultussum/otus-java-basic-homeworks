@@ -3,7 +3,7 @@ package ru.otus.java.basic.homeworks.homework7;
 public class Homework7 {
     public static void main(String[] args) {
         Human human = new Human("Ярослав", 10);
-        Transport[] transports = {new Car(), new Horse(), new Bicycle(human), new Rover()};
+        Transport[] transports = {new Car(), new Horse(), new Bicycle(), new Rover()};
 
         human.move(5, TerrainType.DENSE_FOREST);
         human.move(5, TerrainType.SWAMP);

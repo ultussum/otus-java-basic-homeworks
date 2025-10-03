@@ -2,6 +2,7 @@ package ru.otus.java.basic.homeworks.homework7;
 
 public class Car extends GeneralTransport {
     private int petrol;
+    private final int MAX_DIST = 60;
 
     public int getPetrol() {
         return petrol;
@@ -27,7 +28,7 @@ public class Car extends GeneralTransport {
             System.out.println("Машина не может двигаться по местности " + terrainType.getTerrainRu());
             return false;
         }
-        if (distant > 60 || petrol < distant) {
+        if (distant > MAX_DIST || petrol < distant) {
             System.out.println("Не может передвигаться! Слишком большое расстояние или закончился бензин.");
             return false;
         }

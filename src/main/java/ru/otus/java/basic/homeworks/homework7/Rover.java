@@ -2,6 +2,7 @@ package ru.otus.java.basic.homeworks.homework7;
 
 public class Rover extends GeneralTransport {
     private int petrol;
+    private final int MAX_DIST = 30;
 
     public int getPetrol() {
         return petrol;
@@ -23,7 +24,7 @@ public class Rover extends GeneralTransport {
 
     @Override
     public boolean move(int distant, TerrainType terrainType) {
-        if (distant > 30 || distant > petrol) {
+        if (distant > MAX_DIST || distant > petrol) {
             System.out.println("Не может передвигаться! Слишком большое расстояние или закончился бензин.");
             return false;
         }

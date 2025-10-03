@@ -38,7 +38,7 @@ public class Human {
 
     public void standUpHum(Transport transport, Human human) {
         if (currentTransport == null) {
-            System.out.println(name + " не исплользует транспорт сейчас.");
+            System.out.println(name + " не использует транспорт сейчас.");
             return;
         }
         currentTransport.standUp(human);

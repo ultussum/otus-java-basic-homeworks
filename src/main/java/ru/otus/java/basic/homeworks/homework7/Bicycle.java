@@ -2,6 +2,7 @@ package ru.otus.java.basic.homeworks.homework7;
 
 public class Bicycle extends GeneralTransport {
     private int endurance;
+    private final int MAX_DIST = 15;
 
     public int getPetrol() {
         return endurance;
@@ -11,9 +12,9 @@ public class Bicycle extends GeneralTransport {
         this.endurance = endurance;
     }
 
-    public Bicycle(Human human) {
+    public Bicycle() {
         super(TransportType.BICYCLE);
-        this.endurance = human.getEnduranceHum();
+        this.endurance = 3;
     }
 
     @Override
@@ -27,7 +28,7 @@ public class Bicycle extends GeneralTransport {
             System.out.println("Велосипед не может двигаться по местности " + terrainType.getTerrainRu());
             return false;
         }
-        if (distant > 15 || endurance < distant) {
+        if (distant > MAX_DIST || endurance < distant) {
             System.out.println("Не может передвигаться! Слишком большое расстояние или закончились силы.");
             return false;
         }
