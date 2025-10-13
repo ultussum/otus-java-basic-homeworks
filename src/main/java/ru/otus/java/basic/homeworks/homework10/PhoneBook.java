@@ -32,7 +32,7 @@ public class PhoneBook {
         for (Map.Entry<String, List<String>> entry : phoneBook.entrySet()) {
             String nameList = entry.getKey();
             List<String> phoneNumbers = entry.getValue();
-            if (nameList.equals(name) || nameList.contains(name)) {
+            if (nameList.contains(name)) {
                 String fullName = String.join(" ", nameList);
                 System.out.println("Найденные номера для " + fullName + ":");
                 for (int i = 0; i < phoneNumbers.size(); i++) {
