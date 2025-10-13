@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PhoneBook {
-    private Map<List<String>, List<String>> phoneBook;
+    private Map<String, List<String>> phoneBook;
 
     public PhoneBook() {
         phoneBook = new HashMap<>();
@@ -19,7 +19,7 @@ public class PhoneBook {
                 '}';
     }
 
-    public void add(List<String> name, String phoneNumber) {
+    public void add(String name, String phoneNumber) {
         List<String> phoneNumbers = phoneBook.get(name);
         if (phoneNumbers == null) {
             phoneNumbers = new ArrayList<>();
@@ -27,13 +27,12 @@ public class PhoneBook {
         }
         phoneNumbers.add(phoneNumber);
     }
-    public void find(List<String> name){
+    public void find(String name){
         List<String> resultSearch = new ArrayList<>();
-        String searchLastName = name.get(0);
-        for (Map.Entry<List<String>, List<String>> entry : phoneBook.entrySet()) {
-            List<String> nameList = entry.getKey();
+        for (Map.Entry<String, List<String>> entry : phoneBook.entrySet()) {
+            String nameList = entry.getKey();
             List<String> phoneNumbers = entry.getValue();
-            if (nameList.get(0).equals(searchLastName) || nameList.equals(name)) {
+            if (nameList.equals(name) || nameList.contains(name)) {
                 String fullName = String.join(" ", nameList);
                 System.out.println("Найденные номера для " + fullName + ":");
                 for (int i = 0; i < phoneNumbers.size(); i++) {
