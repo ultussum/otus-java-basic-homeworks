@@ -2,8 +2,6 @@ package ru.otus.java.basic.homeworks.homework13;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Client {

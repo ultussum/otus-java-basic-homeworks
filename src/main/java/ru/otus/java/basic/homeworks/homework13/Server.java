@@ -22,9 +22,9 @@ public class Server {
                     continue;
                 }
 
-                    dos.writeUTF(exampleSolution(userInput));
-                    dos.flush();
-                    System.out.println("result= " + exampleSolution(userInput));
+                dos.writeUTF(exampleSolution(userInput));
+                dos.flush();
+                System.out.println("result= " + exampleSolution(userInput));
 
             }
         } catch (IOException e) {
@@ -43,7 +43,6 @@ public class Server {
             }
         }
         Operations.checkAndExecution(example);
-        result = example.get(0);
-        return result;
+        return result = example.get(0);
     }
 }
