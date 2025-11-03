@@ -16,7 +16,7 @@ public class ExampleClient implements AutoCloseable {
         outputStream.flush();
         try {
             String result = inputStream.readUTF();
-            System.out.println("Результат вычисления: "+result);
+            System.out.println("Результат вычисления: " + result);
         } catch (EOFException e) {
             System.out.println("Сервер закрыл соединение.");
         }

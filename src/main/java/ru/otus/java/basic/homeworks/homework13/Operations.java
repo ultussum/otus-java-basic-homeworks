@@ -29,7 +29,7 @@ public class Operations {
         }
         if (orderCalculationOperator(example, MULTIPLICATION, DIVISION) ||
                 orderCalculationOperator(example, PLUS, MINUS)) {
-            checkAndExecution(example); // Рекурсия после операции
+            checkAndExecution(example);
         }
 
     }
@@ -89,7 +89,7 @@ public class Operations {
                 return true;
             }
         }
-        if (startBracket>endBracket){
+        if (startBracket > endBracket) {
             example.set(0, "Ошибка: Пропущена скобка");
             return false;
         }
