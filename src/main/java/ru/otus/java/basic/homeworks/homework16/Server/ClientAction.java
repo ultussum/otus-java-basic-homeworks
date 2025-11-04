@@ -1,4 +1,4 @@
-package ru.otus.java.basic.homeworks.homework15.Server;
+package ru.otus.java.basic.homeworks.homework16.Server;
 
 import java.io.*;
 import java.net.Socket;
@@ -9,6 +9,8 @@ public class ClientAction {
     private DataInputStream in;
     private DataOutputStream out;
     private String username;
+    private boolean authenticated;
+
 
     public ClientAction(Socket socket, Server server) throws IOException {
         this.socket = socket;
@@ -21,6 +23,46 @@ public class ClientAction {
             System.out.println("Клиент подключился " + socket.getPort());
             sendMsg("Вы подключились с ником: " + username);
             try {
+                while (true) {
+                    sendMsg("Перед работой с чатом необходимо выполнить аутентификацию '/auth login password'" +
+                            " или регистрацию '/reg login password username'");
+                    String message = in.readUTF();
+                    if (message.startsWith("/")) {
+                        if (message.startsWith("/exit")) {
+                            sendMsg("/exitok");
+                            break;
+                        }
+                        // /auth login password
+                        if (message.startsWith("/auth ")) {
+                            String[] token = message.split(" ");
+                            if (token.length != 3) {
+                                sendMsg("Неверный формат команды /auth");
+                                continue;
+                            }
+                            if (server.getAuthenticatedProvider()
+                                    .authenticate(this, token[1], token[2])) {
+                                authenticated = true;
+                                sendMsg("Вы подключились с ником: " + username);
+                                break;
+                            }
+                            continue;
+                        }
+                        // /reg login password username
+                        if (message.startsWith("/reg ")) {
+                            String[] token = message.split(" ");
+                            if (token.length != 4) {
+                                sendMsg("Неверный формат команды /reg");
+                                continue;
+                            }
+                            if (server.getAuthenticatedProvider()
+                                    .register(this, token[1], token[2], token[3])){
+                                authenticated = true;
+                                sendMsg("Вы подключились с ником: " + username);
+                                break;
+                            }
+                        }
+                    }
+                }
                 while (true) {
                     String message = in.readUTF();
                     if (message.startsWith("/")) {

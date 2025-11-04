@@ -1,4 +1,4 @@
-package ru.otus.java.basic.homeworks.homework15.Server;
+package ru.otus.java.basic.homeworks.homework16.Server;
 
 import java.io.IOException;
 import java.net.*;
@@ -8,10 +8,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Server {
     private int port;
     private List<ClientAction> clients;
+    private AuthenticatedProvider authenticatedProvider;
 
     public Server(int port) {
         this.clients = new CopyOnWriteArrayList<>();
         this.port = port;
+        authenticatedProvider = new InMemoryAuthenticatedProvider(this);
+
     }
 
     public void start() {
@@ -19,7 +22,7 @@ public class Server {
             System.out.println("Сервер готов к работе...");
             while (true) {
                 Socket socket = serverSocket.accept();
-                connectClient(new ClientAction(socket, this));
+                new ClientAction(socket, this);
             }
         } catch (IOException e) {
             System.out.println("Сервер не поднялся!");
@@ -35,6 +38,15 @@ public class Server {
         clients.remove(clientAction);
     }
 
+    public boolean isUsernameBusy(String username) {
+        for (ClientAction c : clients) {
+            if (c.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void broadcastMessage(String message) {
         for (ClientAction c : clients) {
             c.sendMsg(message);
@@ -47,5 +59,8 @@ public class Server {
                 c.sendMsg(message);
             }
         }
+    }
+    public AuthenticatedProvider getAuthenticatedProvider() {
+        return authenticatedProvider;
     }
 }

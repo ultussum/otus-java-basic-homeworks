@@ -1,4 +1,4 @@
-package ru.otus.java.basic.homeworks.homework15.Client;
+package ru.otus.java.basic.homeworks.homework16.Client;
 
 import java.io.*;
 import java.net.Socket;
@@ -23,7 +23,14 @@ public class Client {
                             if (message.startsWith("/exitok")) {
                                 break;
                             }
-                        } else {
+                        } if (message.startsWith("/authok ")) {
+                            System.out.println("Удалось успешно войти в чат под именем пользователя "+
+                                    message.split(" ")[1]);
+                        }
+                        if (message.startsWith("/regok ")) {
+                            System.out.println("Удалось успешно пройти регистрацию под ником "+
+                                    message.split(" ")[1]);
+                        }else {
                             System.out.println(message);
                         }
                     }
