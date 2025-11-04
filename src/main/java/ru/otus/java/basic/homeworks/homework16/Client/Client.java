@@ -26,6 +26,7 @@ public class Client {
                         } if (message.startsWith("/authok ")) {
                             System.out.println("Удалось успешно войти в чат под именем пользователя "+
                                     message.split(" ")[1]);
+                            continue;
                         }
                         if (message.startsWith("/regok ")) {
                             System.out.println("Удалось успешно пройти регистрацию под ником "+

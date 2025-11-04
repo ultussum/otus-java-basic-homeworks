@@ -42,7 +42,6 @@ public class ClientAction {
                             if (server.getAuthenticatedProvider()
                                     .authenticate(this, token[1], token[2])) {
                                 authenticated = true;
-                                sendMsg("Вы подключились с ником: " + username);
                                 break;
                             }
                             continue;
@@ -57,7 +56,6 @@ public class ClientAction {
                             if (server.getAuthenticatedProvider()
                                     .register(this, token[1], token[2], token[3])){
                                 authenticated = true;
-                                sendMsg("Вы подключились с ником: " + username);
                                 break;
                             }
                         }
