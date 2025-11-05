@@ -2,6 +2,7 @@ package ru.otus.java.basic.homeworks.homework16.Server;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ClientAction {
     private Socket socket;
@@ -10,6 +11,7 @@ public class ClientAction {
     private DataOutputStream out;
     private String username;
     private boolean authenticated;
+    private  String role;
 
 
     public ClientAction(Socket socket, Server server) throws IOException {
@@ -18,10 +20,10 @@ public class ClientAction {
         this.in = new DataInputStream(socket.getInputStream());
         this.out = new DataOutputStream(socket.getOutputStream());
         username = "user" + socket.getPort();
+        this.role = role;
 
         new Thread(() -> {
             System.out.println("Клиент подключился " + socket.getPort());
-            sendMsg("Вы подключились с ником: " + username);
             try {
                 while (true) {
                     sendMsg("Перед работой с чатом необходимо выполнить аутентификацию '/auth login password'" +
@@ -61,8 +63,14 @@ public class ClientAction {
                         }
                     }
                 }
-                while (true) {
-                    String message = in.readUTF();
+                while (authenticated) {
+                    String message;
+                    try {
+                        message = in.readUTF();
+                    } catch (EOFException | SocketException e) {
+                        System.out.println("Клиент отключился: " + e.getMessage());
+                        break;
+                    }
                     if (message.startsWith("/")) {
                         if (message.startsWith("/exit")) {
                             sendMsg("/exitok");
@@ -73,6 +81,20 @@ public class ClientAction {
                             String nameUser = token[1];
                             message = username + ": " +token[2];
                             server.privetMessage(message, nameUser);
+                        }
+                        if (message.startsWith("/kick")) {
+                            if(role.equalsIgnoreCase(String.valueOf(Role.USER))){
+                                sendMsg("У вас нет прав на отключение пользователей");
+                                continue;
+                            }
+                            String[] token = message.split(" ");
+                            String nameUser = token[1];
+                            if(server.deleteClient(nameUser)){
+                                sendMsg("Пользователь "+nameUser+" отключен");
+                            }else {
+                                sendMsg("Пользователь не найден");
+                            }
+
                         }
                     } else {
                         server.broadcastMessage(username + ": " + message);
@@ -100,6 +122,14 @@ public class ClientAction {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public void disconnect() {

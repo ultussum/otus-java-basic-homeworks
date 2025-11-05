@@ -8,6 +8,7 @@ public class Client {
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
+    private  boolean activeUser = true;
 
     public Client() {
         Scanner sc = new Scanner(System.in);
@@ -17,21 +18,22 @@ public class Client {
             out = new DataOutputStream(socket.getOutputStream());
             new Thread(() -> {
                 try {
-                    while (true) {
+                    while (activeUser) {
                         String message = in.readUTF();
                         if (message.startsWith("/")) {
                             if (message.startsWith("/exitok")) {
+                                activeUser = false;
                                 break;
                             }
-                        } if (message.startsWith("/authok ")) {
-                            System.out.println("Удалось успешно войти в чат под именем пользователя "+
+                        }
+                        if (message.startsWith("/authok ")) {
+                            System.out.println("Удалось успешно войти в чат под именем пользователя " +
                                     message.split(" ")[1]);
-                            continue;
                         }
                         if (message.startsWith("/regok ")) {
-                            System.out.println("Удалось успешно пройти регистрацию под ником "+
+                            System.out.println("Удалось успешно пройти регистрацию под ником " +
                                     message.split(" ")[1]);
-                        }else {
+                        } else {
                             System.out.println(message);
                         }
                     }
@@ -42,10 +44,16 @@ public class Client {
                 }
             }).start();
 
-            while (true) {
+            while (activeUser) {
                 String message = sc.nextLine();
-                out.writeUTF(message);
-                if (message.startsWith("/exit")) {
+                try {
+                    out.writeUTF(message);
+                    if (message.startsWith("/exit")) {
+                        activeUser = false;
+                        break;
+                    }
+                } catch (IOException e) {
+                    System.err.println("Вы отключены от чата");
                     break;
                 }
             }

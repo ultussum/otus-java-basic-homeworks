@@ -8,11 +8,13 @@ public class InMemoryAuthenticatedProvider implements AuthenticatedProvider {
         private String login;
         private String password;
         private String username;
+        private Role role;
 
-        public User(String login, String password, String username) {
+        public User(String login, String password, String username, Role role) {
             this.login = login;
             this.password = password;
             this.username = username;
+            this.role = role;
         }
     }
 
@@ -22,15 +24,23 @@ public class InMemoryAuthenticatedProvider implements AuthenticatedProvider {
     public InMemoryAuthenticatedProvider(Server server) {
         this.server = server;
         this.users = new CopyOnWriteArrayList<>();
-        users.add(new User("qwe", "qwe", "qwe1"));
-        users.add(new User("asd", "asd", "asd1"));
-        users.add(new User("zxc", "zxc", "zxc1"));
+        users.add(new User("qwe", "qwe", "qwe1", Role.ADMIN));
+        users.add(new User("asd", "asd", "asd1", Role.USER));
+        users.add(new User("zxc", "zxc", "zxc1", Role.ADMIN));
     }
 
     private String getUsernameByLoginAndPassword(String login, String password) {
         for (User u : users) {
             if (u.login.equalsIgnoreCase(login) && u.password.equals(password)) {
                 return u.username;
+            }
+        }
+        return null;
+    }
+    private Role getUserRole(String username) {
+        for (User u : users) {
+            if (u.username.equalsIgnoreCase(username)) {
+                return u.role;
             }
         }
         return null;
@@ -62,6 +72,7 @@ public class InMemoryAuthenticatedProvider implements AuthenticatedProvider {
     @Override
     public boolean authenticate(ClientAction clientAction, String login, String password) {
         String authUsername = getUsernameByLoginAndPassword(login, password);
+        String authRole = String.valueOf(getUserRole(authUsername));
         if (authUsername == null) {
             clientAction.sendMsg("Некорректный логин/пароль");
             return false;
@@ -71,6 +82,7 @@ public class InMemoryAuthenticatedProvider implements AuthenticatedProvider {
             return false;
         }
         clientAction.setUsername(authUsername);
+        clientAction.setRole(authRole);
         server.connectClient(clientAction);
         clientAction.sendMsg("/authok " + authUsername);
         return true;
@@ -94,8 +106,9 @@ public class InMemoryAuthenticatedProvider implements AuthenticatedProvider {
             clientAction.sendMsg("Такое имя пользователя уже занято");
             return false;
         }
-        users.add(new User(login, password, username));
+        users.add(new User(login, password, username, Role.USER));
         clientAction.setUsername(username);
+        clientAction.setRole(String.valueOf(Role.USER));
         server.connectClient(clientAction);
         clientAction.sendMsg("/regok " + username);
         return true;

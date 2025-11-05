@@ -60,6 +60,17 @@ public class Server {
             }
         }
     }
+
+    public boolean deleteClient(String userName) {
+        for (ClientAction c : clients) {
+            if (c.getUsername().equals(userName)) {
+                c.sendMsg("/exitok");
+                return true;
+            }
+        }
+        return false;
+    }
+
     public AuthenticatedProvider getAuthenticatedProvider() {
         return authenticatedProvider;
     }
