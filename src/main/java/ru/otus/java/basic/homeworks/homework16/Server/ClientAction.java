@@ -83,7 +83,7 @@ public class ClientAction {
                             server.privetMessage(message, nameUser);
                         }
                         if (message.startsWith("/kick")) {
-                            if(role.equalsIgnoreCase(String.valueOf(Role.USER))){
+                            if(!role.equalsIgnoreCase(String.valueOf(Role.ADMIN))){
                                 sendMsg("У вас нет прав на отключение пользователей");
                                 continue;
                             }
