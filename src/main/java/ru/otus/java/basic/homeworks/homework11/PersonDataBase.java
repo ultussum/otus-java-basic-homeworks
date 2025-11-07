@@ -1,11 +1,18 @@
 package ru.otus.java.basic.homeworks.homework11;
 
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class PersonDataBase {
     private Map<Long, Person> personMap;
+    private static final Set<Position> MANAGER_POSITION = EnumSet.of(
+            Position.MANAGER,
+            Position.DIRECTOR,
+            Position.BRANCH_DIRECTOR,
+            Position.SENIOR_MANAGER);
 
     public PersonDataBase() {
         this.personMap = new HashMap<>();
@@ -22,14 +29,11 @@ public class PersonDataBase {
 
     public boolean isManager(Person person) {
         Position position = person.getPosition();
-        return position == Position.MANAGER ||
-                position == Position.DIRECTOR ||
-                position == Position.BRANCH_DIRECTOR ||
-                position == Position.SENIOR_MANAGER;
+        return MANAGER_POSITION.contains(position);
     }
 
     public boolean isEmployee(Long id) {
         Person person = findById(id);
-        return !isManager(person);
+        return !MANAGER_POSITION.contains(person.getPosition());
     }
 }
