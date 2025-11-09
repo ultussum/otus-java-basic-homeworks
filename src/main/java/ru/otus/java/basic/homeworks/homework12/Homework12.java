@@ -23,7 +23,7 @@ public class Homework12 {
     }
 
     private static void fileContents(String nameFile) {
-        try (InputStreamReader in = new InputStreamReader(new FileInputStream(nameFile))) {
+        try (BufferedReader in = new BufferedReader (new InputStreamReader(new FileInputStream(nameFile)))) {
             int n = in.read();
             while (n != -1) {
                 System.out.print((char) n);
