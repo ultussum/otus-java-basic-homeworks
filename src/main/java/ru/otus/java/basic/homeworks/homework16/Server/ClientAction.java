@@ -79,8 +79,8 @@ public class ClientAction {
                         if (message.startsWith("/w")) {
                             String[] token = message.split(" ", 3);
                             String nameUser = token[1];
-                            message = username + ": " +token[2];
-                            server.privetMessage(message, nameUser);
+                            message = token[2];
+                            server.privateMessage(message, nameUser, username);
                         }
                         if (message.startsWith("/kick")) {
                             if(!role.equalsIgnoreCase(String.valueOf(Role.ADMIN))){

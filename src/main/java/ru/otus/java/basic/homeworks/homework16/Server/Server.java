@@ -53,10 +53,10 @@ public class Server {
         }
     }
 
-    public void privetMessage(String message, String userName) {
+    public void privateMessage(String message, String userName, String username) {
         for (ClientAction c : clients) {
             if (c.getUsername().equals(userName)) {
-                c.sendMsg(message);
+                c.sendMsg(username+"(отправилено только Вам): "+message);
             }
         }
     }
