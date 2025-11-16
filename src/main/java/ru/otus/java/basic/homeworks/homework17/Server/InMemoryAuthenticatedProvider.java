@@ -1,4 +1,4 @@
-package ru.otus.java.basic.homeworks.homework16.Server;
+package ru.otus.java.basic.homeworks.homework17.Server;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;

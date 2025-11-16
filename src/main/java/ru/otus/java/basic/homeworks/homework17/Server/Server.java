@@ -1,4 +1,4 @@
-package ru.otus.java.basic.homeworks.homework16.Server;
+package ru.otus.java.basic.homeworks.homework17.Server;
 
 import java.io.IOException;
 import java.net.*;
@@ -53,10 +53,10 @@ public class Server {
         }
     }
 
-    public void privetMessage(String message, String userName) {
+    public void privateMessage(String message, String userName, String username) {
         for (ClientAction c : clients) {
             if (c.getUsername().equals(userName)) {
-                c.sendMsg(message);
+                c.sendMsg(username+"(отправилено только Вам): "+message);
             }
         }
     }
