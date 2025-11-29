@@ -1,4 +1,4 @@
-package ru.otus.java.basic.homeworks.homework16.Server;
+package ru.otus.java.basic.homeworks.homework17.Server;
 
 public class ServerRun {
     public static final int PORT = 8080;
