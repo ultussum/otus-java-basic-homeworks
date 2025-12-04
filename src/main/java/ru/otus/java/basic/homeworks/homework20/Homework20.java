@@ -21,14 +21,18 @@ public class Homework20 {
             return 0;
         }
         int count = 0;
+        String buffer = "";
         try (BufferedReader reader = new BufferedReader(new FileReader(nameFile, java.nio.charset.StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
+                String combined = buffer + line;
                 int index = 0;
-                while ((index = line.indexOf(symbolsSequence, index)) != -1) {
+                while ((index = combined.indexOf(symbolsSequence, index)) != -1) {
                     count++;
                     index += symbolsSequence.length();
                 }
+                int keepLength = Math.max(0, symbolsSequence.length() - 1);
+                buffer = combined.substring(Math.max(0, combined.length() - keepLength));
             }
         }
         return count;
