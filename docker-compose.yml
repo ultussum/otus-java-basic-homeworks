@@ -1,0 +1,10 @@
+services:
+  otus-db:
+    image: postgres
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=alexeeva0601
+      - POSTGRES_DB=otus-db
