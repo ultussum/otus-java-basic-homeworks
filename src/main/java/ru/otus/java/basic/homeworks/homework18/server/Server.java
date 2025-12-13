@@ -1,4 +1,4 @@
-package ru.otus.java.basic.homeworks.homework17.Server;
+package ru.otus.java.basic.homeworks.homework18.server;
 
 import java.io.IOException;
 import java.net.*;
@@ -9,11 +9,13 @@ public class Server {
     private int port;
     private List<ClientAction> clients;
     private AuthenticatedProvider authenticatedProvider;
+    private  Provider provider;
 
     public Server(int port) {
         this.clients = new CopyOnWriteArrayList<>();
         this.port = port;
-        authenticatedProvider = new InMemoryAuthenticatedProvider(this);
+        this.provider = new Provider();
+        authenticatedProvider = new InMemoryAuthenticatedProvider(this, this.provider);
 
     }
 

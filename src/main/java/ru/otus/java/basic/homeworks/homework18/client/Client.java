@@ -1,4 +1,4 @@
-package ru.otus.java.basic.homeworks.homework17.Client;
+package ru.otus.java.basic.homeworks.homework18.client;
 
 import java.io.*;
 import java.net.Socket;

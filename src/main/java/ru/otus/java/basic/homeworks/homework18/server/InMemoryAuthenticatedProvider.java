@@ -1,4 +1,4 @@
-package ru.otus.java.basic.homeworks.homework17.Server;
+package ru.otus.java.basic.homeworks.homework18.server;
 
 import java.sql.*;
 import java.util.*;
@@ -136,119 +136,36 @@ public class InMemoryAuthenticatedProvider implements AuthenticatedProvider {
         }
     }
 
-    private static final String DB_URL = "jdbc:postgresql://localhost:5432/otus-db";
-    private static final String DB_USER = "postgres";
-    private static final String DB_PAS = "alexeeva0601";
-    private static final String USER_QUERY = "select * from users";
-    private static final String USER_ROLE_QUERY = "select r.id, r.name from role r " +
-            "join users_to_role ur on r.id = ur.role_id " +
-            "where ur.users_id = ?";
-    private static final String USER_INSERT = "insert into users (email, password, username) values (?,?,?)";
-    private static final String USER_ROLE_INSERT = "insert into users_to_role (users_id, role_id) values (?, ?)";
     private List<User> users;
     private Server server;
-    private Connection connection;
+    private Provider provider;
 
-    public InMemoryAuthenticatedProvider(Server server) {
+    public InMemoryAuthenticatedProvider(Server server, Provider provider) {
         this.server = server;
+        this.provider = provider;
         this.users = new CopyOnWriteArrayList<>();
-        initialize();
-    }
-
-    private String getUsernameByLoginAndPassword(String login, String password) {
-        for (User u : users) {
-            if (u.login.equalsIgnoreCase(login) && u.password.equals(password)) {
-                return u.username;
-            }
-        }
-        return null;
-    }
-
-    private List<Role> getUserRole(String username) {
-        for (User u : users) {
-            if (u.username.equalsIgnoreCase(username)) {
-                return u.roles;
-            }
-        }
-        return null;
-    }
-
-    private boolean isLoginAlreadyExists(String login) {
-        for (User u : users) {
-            if (u.login.equalsIgnoreCase(login)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isUsernameAlreadyExists(String username) {
-        for (User u : users) {
-            if (u.username.equalsIgnoreCase(username)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
     public void initialize() {
-        try {
-            connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PAS);
-            System.out.println("Подключение к БД установлено");
-            creatingListUsers();
-        } catch (SQLException e) {
-            throw new RuntimeException("Ошибка подключения к БД", e);
-        }
-    }
 
-    private void creatingListUsers() {
-        try (Statement stmt = connection.createStatement()) {
-            ResultSet rs = stmt.executeQuery(USER_QUERY);
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String login = rs.getString("email");
-                String password = rs.getString("password");
-                String username = rs.getString("username");
-                List<Role> roles = creatingListUsersRoles(id);
-                users.add(new User(id, login, password, username, roles));
-            }
-        } catch (SQLException e) {
-            System.out.println("Ошибка загрузки пользователей: " + e.getMessage());
-        }
-    }
-
-    private List<Role> creatingListUsersRoles(int userId) {
-        List<Role> userRoles = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement(USER_ROLE_QUERY)) {
-            ps.setInt(1, userId);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    int id = rs.getInt("id");
-                    String nameRole = rs.getString("name");
-                    userRoles.add(new Role(id, nameRole));
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("Ошибка загрузки ролей: " + e.getMessage());
-        }
-        return userRoles;
     }
 
     @Override
     public boolean authenticate(ClientAction clientAction, String login, String password) {
-        String authUsername = getUsernameByLoginAndPassword(login, password);
-        String authRole = String.valueOf(getUserRole(authUsername));
-        if (authUsername == null) {
+        HashMap<String, List<String>> user = provider.searchUser(login, password);
+        if (user.isEmpty()) {
             clientAction.sendMsg("Некорректный логин/пароль");
             return false;
         }
+        String authUsername = user.keySet().iterator().next();
+        List<String> roles = user.get(authUsername);
         if (server.isUsernameBusy(authUsername)) {
             clientAction.sendMsg("Указанная учетная запись уже используется");
             return false;
         }
         clientAction.setUsername(authUsername);
-        clientAction.setRole(authRole);
+        clientAction.setRoles(roles);
         server.connectClient(clientAction);
         clientAction.sendMsg("/authok " + authUsername);
         return true;
@@ -264,36 +181,19 @@ public class InMemoryAuthenticatedProvider implements AuthenticatedProvider {
             clientAction.sendMsg("Пароль должен содержать 4+ символов");
             return false;
         }
-        if (isLoginAlreadyExists(login)) {
+        if (provider.checkUniqueLogin(login)) {
             clientAction.sendMsg("Такой логин уже занят");
             return false;
         }
-        if (isUsernameAlreadyExists(username)) {
+        if (provider.checkUniqueUsername(username)) {
             clientAction.sendMsg("Такое имя пользователя уже занято");
             return false;
         }
-        try (PreparedStatement ps = connection.prepareStatement(USER_INSERT, Statement.RETURN_GENERATED_KEYS)){
-            ps.setString(1, login);
-            ps.setString(2,password);
-            ps.setString(3, username);
-            ps.executeUpdate();
-            try (ResultSet rs = ps.getGeneratedKeys()){
-                if (rs.next()) {
-                    int userId = rs.getInt("id");
-                    try (PreparedStatement psRole = connection.prepareStatement(USER_ROLE_INSERT)) {
-                        psRole.setInt(1, userId);
-                        psRole.setInt(2, 2);
-                        psRole.executeUpdate();
-                    }
-                    List<Role> userRole = creatingListUsersRoles(userId);
-                    users.add(new User(userId, login, password, username, userRole));
-                }
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Ошибка создания пользователя: " + e.getMessage());
-        }
-        clientAction.setUsername(username);
+        HashMap<String, List<String>> user = provider.createUser(login, password, username);
+        String regUsername = user.keySet().iterator().next();
+        List<String> roles = user.get(regUsername);
+        clientAction.setUsername(regUsername);
+        clientAction.setRoles(roles);
         server.connectClient(clientAction);
         clientAction.sendMsg("/regok " + username);
         return true;

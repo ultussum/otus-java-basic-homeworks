@@ -1,8 +1,10 @@
-package ru.otus.java.basic.homeworks.homework17.Server;
+package ru.otus.java.basic.homeworks.homework18.server;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClientAction {
     private Socket socket;
@@ -11,7 +13,7 @@ public class ClientAction {
     private DataOutputStream out;
     private String username;
     private boolean authenticated;
-    private  String role;
+    private  List<String> roles;
 
 
     public ClientAction(Socket socket, Server server) throws IOException {
@@ -20,7 +22,7 @@ public class ClientAction {
         this.in = new DataInputStream(socket.getInputStream());
         this.out = new DataOutputStream(socket.getOutputStream());
         username = "user" + socket.getPort();
-        this.role = role;
+        this.roles = new ArrayList<>();
 
         new Thread(() -> {
             System.out.println("Клиент подключился " + socket.getPort());
@@ -83,7 +85,7 @@ public class ClientAction {
                             server.privateMessage(message, nameUser, username);
                         }
                         if (message.startsWith("/kick")) {
-                            if(!role.equalsIgnoreCase(String.valueOf(Role.ADMIN))){
+                            if(!roles.contains(String.valueOf(Role.ADMIN))){
                                 sendMsg("У вас нет прав на отключение пользователей");
                                 continue;
                             }
@@ -124,12 +126,12 @@ public class ClientAction {
         this.username = username;
     }
 
-    public String getRole() {
-        return role;
+    public List<String> getRoles() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     public void disconnect() {
