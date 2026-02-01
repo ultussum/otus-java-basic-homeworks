@@ -1,0 +1,52 @@
+package ru.otus.java.basic.homeworks.homework24;
+
+import ru.otus.java.basic.homeworks.homework24.exceptions_handling.BadRequestException;
+import ru.otus.java.basic.homeworks.homework24.processors.*;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+import java.util.*;
+
+public class Dispatcher {
+    private Map<String, RequestProcessor> routes;
+    private RequestProcessor defaultNotFoundProcessor;
+    private RequestProcessor defaultStaticResourceProcessor;
+
+    public Dispatcher() {
+        routes = new HashMap<>();
+        routes.put("GET /shop/api/v1/items", new GetItemsProcessor());
+        routes.put("POST /shop/api/v1/items", new CreateItemsProcessor());
+        routes.put("DELETE /shop/api/v1/items", new DeleteItemsProcessor());
+        defaultNotFoundProcessor = new DefaultNotFoundProcessor();
+        defaultStaticResourceProcessor = new DefaultStaticResourceProcessor();
+    }
+
+    public void execute(Request request, OutputStream output) throws IOException {
+        if (Files.exists(Paths.get("static/", request.getUri().substring(1)))) {
+            defaultStaticResourceProcessor.execute(request, output);
+            return;
+        }
+        if (!routes.containsKey(request.getRoutingKey())) {
+            defaultNotFoundProcessor.execute(request, output);
+            return;
+        }
+        try {
+            routes.get(request.getRoutingKey()).execute(request, output);
+        } catch (BadRequestException e) {
+            String response = "" +
+                    "HTTP/1.1 400 Bad Request\r\n" +
+                    "Content-Type: text/html;charset=utf-8\r\n" +
+                    "\r\n" +
+                    "<html><body><h1>BAD REQUEST: " + e.getMessage() + "</h1></body></html>";
+            output.write(response.getBytes(StandardCharsets.UTF_8));
+        } catch (Exception e) {
+            String response = "" +
+                    "HTTP/1.1 500 Internal Server Error\r\n" +
+                    "Content-Type: text/html;charset=utf-8\r\n" +
+                    "\r\n" +
+                    "<html><body><h1>ОЙ</h1></body></html>";
+            output.write(response.getBytes(StandardCharsets.UTF_8));
+        }
+    }
+}
